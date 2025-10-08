@@ -59,6 +59,9 @@ class User extends Authenticatable
         ];
     }
 
+    public function isSuperAdmin(): bool{
+        return $this->hasRole('super_admin');
+    }
 
     public function profile(){
         return $this->hasOne(Profile::class);
