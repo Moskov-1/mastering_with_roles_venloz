@@ -39,7 +39,7 @@ class AuthController extends Controller
         ]);
 
          if( Auth::attempt(['email' => $request->email,'password'=> $request->password]) ){
-            return redirect()->route('backend.index')->with("success","login completed successfully");
+            return redirect()->route('backend.dashboard.index')->with("success","login completed successfully");
         }
         return back()->with(
             'error', 'Invalid credentials provided.'
