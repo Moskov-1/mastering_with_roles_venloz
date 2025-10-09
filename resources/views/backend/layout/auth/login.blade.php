@@ -6,7 +6,7 @@
         <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="username" 
-                name="email"
+                name="email" value="{{ old('email') }}"
             placeholder="Enter email">
         </div>
 
@@ -51,5 +51,5 @@
 
 @push('srcipts-bottom')
     <!-- password-custom logi -->
-    <script src="{{asset('')}}assets/js/raihan/password-toggle.js"></script>
+    <script src="{{asset('assets/js/raihan/password-toggle.js')}}"></script>
 @endpush

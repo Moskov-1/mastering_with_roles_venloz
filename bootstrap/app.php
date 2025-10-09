@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            Route::middleware(['web', 'admin', 'auth'  ])->prefix('admin')
+            Route::middleware(['web', 'admin', 'auth', 'session.validity.check' ])->prefix('admin')
                 ->group(base_path('routes/admin.php'));
         }
     )
@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => adminMiddleware::class,
             'jwt.verify' => JWTMiddleware::class,
+            'session.validity.check' => \App\Http\Middleware\CheckSessionValidity::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,

@@ -21,12 +21,13 @@ class adminMiddleware
         }
 
         if (Auth::check() && !Auth::user()->hasRole("admin")) {
+            dd(Auth::user(), Auth::user()->hasRole("admin"));
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            // dd(Auth::user(), Auth::user()->hasRole("admin"));
             return redirect()->route('login')->with("error","Unauthorized");
         }
+        // dd('middleware-end');
         
         return $next($request);
     }

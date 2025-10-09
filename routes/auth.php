@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\Backend\Auth\AuthController;
     Route::get('login', [AuthController::class,'getLogin'])->name('login');
 
 Route::group(['as'=> 'auth.'], function () {
+
     Route::get('signup', [AuthController::class,'getSignUp'])->name('signup.get');
     Route::post('signup', [AuthController::class,'signup'])->name('signup.post');
     

@@ -31,15 +31,17 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-
+        
         // dd($request->all());
         $request->validate([
             "email"=> "required|email|exists:users,email",
-            "password"=> "required"
+            "password"=> "required:min:5"
         ]);
         if( Auth::attempt(['email' => $request->email,'password'=> $request->password]) ){
             return redirect()->route('backend.dashboard.index')->with("success","login completed successfully");
         }
+        // dd(__FILE__, $request->all());
+
         return back()->with(
             'error', 'Invalid credentials provided.'
         );
