@@ -5,8 +5,8 @@ use App\Http\Controllers\Web\Backend\FaqController;
 use App\Http\Controllers\Web\Backend\ProjectController;
 use App\Http\Controllers\Web\Backend\SiteController;
 use Illuminate\Support\Facades\Route;
+Route::group([ 'as'=>'backend.'], function () {
 
-Route::group([ 'as'=>'backend.', 'middleware'=> ['admin']], function () {
     Route::get('/', [SiteController::class,'index'])->name('dashboard.index');
     Route::resource('project', ProjectController::class)->except(['show']);
 

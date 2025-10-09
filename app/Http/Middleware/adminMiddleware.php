@@ -16,11 +16,13 @@ class adminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::check()) {
-            return redirect()->route('auth.login.get')->with('error', 'User is unauthorized');
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in');
         }
-        else if(Auth::check() && Auth::user()->hasRole("admin")) {
-            return redirect('/')->with("error","");
+
+        if (!Auth::user()->hasRole("admin")) {
+            // dd(Auth::user());
+            return redirect('/')->with("error","Unauthorized");
         }
         
         return $next($request);

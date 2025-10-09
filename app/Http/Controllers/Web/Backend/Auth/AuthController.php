@@ -37,8 +37,7 @@ class AuthController extends Controller
             "email"=> "required|email|exists:users,email",
             "password"=> "required"
         ]);
-
-         if( Auth::attempt(['email' => $request->email,'password'=> $request->password]) ){
+        if( Auth::attempt(['email' => $request->email,'password'=> $request->password]) ){
             return redirect()->route('backend.dashboard.index')->with("success","login completed successfully");
         }
         return back()->with(

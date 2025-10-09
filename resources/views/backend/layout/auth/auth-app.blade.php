@@ -86,14 +86,14 @@
                                         <div class="mt-4">
                                             @yield('content')
                                         </div>
-                                        @if (Route::is('auth.login.get'))
+                                        @if (Route::is('login'))
                                         
                                             <div class="mt-5 text-center">
                                                 <p class="mb-0">Don't have an account ? <a href="{{route('auth.signup.get')}}" class="fw-semibold text-primary text-decoration-underline"> Signup</a> </p>
                                             </div>
                                         @else
                                             <div class="mt-5 text-center">
-                                                <p class="mb-0">Already have an account ? <a href="{{route('auth.login.get')}}" class="fw-semibold text-primary text-decoration-underline"> login</a> </p>
+                                                <p class="mb-0">Already have an account ? <a href="{{route('login')}}" class="fw-semibold text-primary text-decoration-underline"> login</a> </p>
                                             </div>
                                         @endif
                                     </div>
