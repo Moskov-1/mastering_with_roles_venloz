@@ -20,9 +20,12 @@ class adminMiddleware
             return redirect()->route('login')->with('error', 'Please log in');
         }
 
-        if (!Auth::user()->hasRole("admin")) {
-            // dd(Auth::user());
-            return redirect('/')->with("error","Unauthorized");
+        if (Auth::check() && !Auth::user()->hasRole("admin")) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            // dd(Auth::user(), Auth::user()->hasRole("admin"));
+            return redirect()->route('login')->with("error","Unauthorized");
         }
         
         return $next($request);
