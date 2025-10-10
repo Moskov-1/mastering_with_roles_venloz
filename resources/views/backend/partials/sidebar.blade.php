@@ -107,10 +107,18 @@
                 
                 @if(auth()->user()->hasAnyRole(['super_admin']) || auth()->user()->can('role_management'))
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{getPageStatus('backend.role.*','collapsed active')}}" href="#sidebarPages" data-bs-toggle="collapse" role="button" 
+                        <a class="nav-link menu-link {{getPageStatus(['backend.role.*','backend.system-user.*'],'collapsed active')}}" href="#sidebarPages" data-bs-toggle="collapse" role="button" 
                         aria-expanded="false" aria-controls="sidebarPages">
                             <i class="ri-pages-line"></i> <span data-key="t-pages">Users</span>
                         </a>
+                        <div class="collapse menu-dropdown {{getPageStatus('backend.system-user.*','show')}}" id="sidebarPages">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="{{route('backend.system-user.index')}}" class="nav-link {{getPageStatus('backend.system-user.*')}}" data-key="t-starter"> System Users </a>
+                                </li>
+                                
+                            </ul>
+                        </div>
                         <div class="collapse menu-dropdown {{getPageStatus('backend.role.*','show')}}" id="sidebarPages">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">

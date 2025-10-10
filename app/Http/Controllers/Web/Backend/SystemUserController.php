@@ -7,13 +7,15 @@ use App\Rules\PasswordRule;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Contracts\DataTable;
 
 class SystemUserController extends Controller
 {
     public function index(Request $request){
-        $users = User::where('is_admin_user', 1)->orderBy('id','desc')->paginate(10);
+        $users = User::where('is_admin_user', 1)->orderBy('id','desc')->get();
         if($request->ajax()){
             return DataTables::of($users)
             ->addIndexColumn()
@@ -29,8 +31,8 @@ class SystemUserController extends Controller
                     ->implode(' ');
             })
             ->addColumn('status', function ($data) {
-                $backgroundColor  = $data->status == $data->status ? '#4CAF50' : '#ccc';
-                $sliderTranslateX = $data->status == $data->status ? '26px' : '2px';
+                $backgroundColor  = $data->status ? '#4CAF50' : '#ccc';
+                $sliderTranslateX = $data->status ? '26px' : '2px';
                 
                 return getStatusHTML($data, $backgroundColor, $sliderTranslateX);
             })
@@ -44,13 +46,14 @@ class SystemUserController extends Controller
                 </button>
             ';
             })
-            ->rawColumns(['name', 'email', 'roles', 'status', 'action'])
+            ->rawColumns(['roles', 'status', 'action'])
             ->make(true);
         }
         return view('backend.layout.users.system_users.index');
     }
     public function create(){
-        return view('backend.layout.users.system_users.form');
+        $permissions = Role::all()->pluck('name')->toArray();
+        return view('backend.layout.users.system_users.form', compact('permissions'));
     }
     public function store(UserRequest $request){
         $data = $request->validated();
@@ -61,20 +64,26 @@ class SystemUserController extends Controller
         $user->is_admin_user = $data['is_admin_user'];
         $user->password = bcrypt($data['password']);
         $user->save();
+        $user->syncRoles($data['role']);
 
         return redirect()->route('backend.system-user.index')->with('success','System User Successfully created');
     }
 
     public function edit(User $system_user){
-        return view('backend.system-user.form', compact('system_user'));
+        // dd($system_user->roles());
+        $roles = Role::all()->pluck('name')->toArray();
+        $userRoles = $system_user->getRoleNames()->toArray();
+        // dd($system_user->getRoleNames());
+        return view('backend.layout.users.system_users.form', compact('system_user', 'roles', 'userRoles'));
     }
 
     
     public function update(Request $request, User $system_user){
+        // dd($request->all());
         $request->validate([
             'name' => 'required',
-            'email'=> 'required|unique:users,email',
-            'password' => [['required', new PasswordRule]],
+            // 'email'=> 'required|email',
+            'password' => [['nullable', new PasswordRule]],
         ]);
         try {
             if(is_null($request['password'])){
@@ -83,13 +92,30 @@ class SystemUserController extends Controller
             }
             $data = $request->only(['name','email']);
             $system_user->update($data);
+     
+            if ($request->has('role')) {
+                $system_user->syncRoles($request->role);
+            }
             
         } catch (\Exception $e) {
-            return redirect()->route('backend.system-user.index')->with('error','System User Failed to create');
+            return redirect()->route('backend.system-user.index')->with('error','System User Failed to Update,,,'.$e->getMessage());
         }
         return redirect()->route('backend.system-user.index')->with('success','System User Successfully created');
     }
 
+    public function status($id){
+        try {
+            $system_user = User::find($id);
+            $system_user->status = !$system_user->status;
+            $system_user->update();
+
+            return response()->json(['status'=> 'success', 'message', 'Status Changed Successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['status'=> 'error', 'message', 'Status Change Failed ...'. $e->getMessage() ]);
+
+        }
+        
+    }
     public function destroy(User $system_user){
         try {
             $system_user->delete();

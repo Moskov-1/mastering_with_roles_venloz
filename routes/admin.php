@@ -22,7 +22,7 @@ Route::group([ 'as'=>'backend.'], function () {
     Route::post('page/status/{id}', [PageController::class,'status'])->name('page.status');
     Route::resource('page', PageController::class)->except(['show']);
     
-    Route::post('system-user/status/{id}', [SystemUserController::class,'status'])->name('system-use.status');
+    Route::post('system-user/status/{id}', [SystemUserController::class,'status'])->name('system-user.status');
     Route::resource('system-user', SystemUserController::class)->except(['show']);
     
     Route::resource('role', RoleController::class)->except(['show'])->middleware('role:super_admin');

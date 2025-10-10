@@ -17,11 +17,11 @@ use Intervention\Image\Facades\Image;
         return $status;
 
     }
-    function getPageStatus(string $url , $text=null){
-        if($text)
-        return Route::is($url) ? $text : '';
-        return Route::is($url) ? 'active' : '';
+    function getPageStatus(array|string $url , $text=null){
+    
+        return Route::is($url) ? ($text ?? 'active') : '';
     }
+
     function fileUpdate($file, string $folder, string $old = null, $option = null){
         if($old){
             fileDelete($old);
