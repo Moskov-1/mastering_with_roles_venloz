@@ -6,7 +6,7 @@
             <div class="card-body">
 
                 <div class="d-flex justify-content-end mb-2">
-                    <a href="{{ route('backend.role.create') }}" class="btn btn-primary">Add User</a>
+                    <a href="{{ route('backend.role.create') }}" class="btn btn-primary">Add Role</a>
                 </div>
 
                 <div class="table-responsive">

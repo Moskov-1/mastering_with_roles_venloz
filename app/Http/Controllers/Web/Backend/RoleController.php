@@ -26,7 +26,8 @@ class RoleController extends Controller
     }
 
     public function create(Request $request){
-        return view('backend.layout.roles.create');
+        $permissions = Permission::all();
+        return view('backend.layout.roles.create', compact('permissions'));
     }
 
     
@@ -34,6 +35,16 @@ class RoleController extends Controller
         $permissions = Permission::all();
         $rolePermissions = $role->permissions()->pluck('name')->toArray();
         return view('backend.layout.roles.form', compact('role', 'rolePermissions', 'permissions'));
+    }
+
+    public function store(Request $request){
+        $request->validate([
+            'name' => 'required|unique:roles,name',
+        ]);
+        // dd($request->all());
+        $role = Role::create($request->only('name'));
+        $role->syncPermissions($request->permissions);
+        return redirect()->route('backend.role.index')->with('success','Role created succesffully');
     }
 
     public function update(Request $request, Role $role){
@@ -44,7 +55,7 @@ class RoleController extends Controller
         ]);
         $role->syncPermissions($request->permissions);
 
-        return redirect()->route('backend.role.index');
+        return redirect()->route('backend.role.index')->with('success', 'Role Updated Successfully');
     }
 
     public function destroy(Role $role){
