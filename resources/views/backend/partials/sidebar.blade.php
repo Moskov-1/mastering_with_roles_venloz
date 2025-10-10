@@ -104,6 +104,7 @@
                         </ul>
                     </div>
                 </li>
+                
                 @if(auth()->user()->hasAnyRole(['super_admin']) || auth()->user()->can('role_management'))
                     <li class="nav-item">
                         <a class="nav-link menu-link {{getPageStatus('backend.role.*','collapsed active')}}" href="#sidebarPages" data-bs-toggle="collapse" role="button" 
