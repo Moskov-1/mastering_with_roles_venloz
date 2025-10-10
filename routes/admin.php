@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\Backend\SystemUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Web\Backend\FaqController;
@@ -20,7 +21,10 @@ Route::group([ 'as'=>'backend.'], function () {
 
     Route::post('page/status/{id}', [PageController::class,'status'])->name('page.status');
     Route::resource('page', PageController::class)->except(['show']);
-
+    
+    Route::post('system-user/status/{id}', [SystemUserController::class,'status'])->name('system-use.status');
+    Route::resource('system-user', SystemUserController::class)->except(['show']);
+    
     Route::resource('role', RoleController::class)->except(['show'])->middleware('role:super_admin');
 
     require_once __DIR__ .'/settings.php';

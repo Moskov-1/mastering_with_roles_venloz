@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
             "name"=> "superadmin",
             "email"=> "superadmin@gmail.com",
             'is_admin_user' => '1',
+            'status' => '1',
             "password" => bcrypt(env("DEFAULT_PASSWORD", '12345678')),
         ])->assignRole('super_admin');
 
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
             "name"=> "admin",
             "email"=> "admin@gmail.com",
             'is_admin_user' => '1',
+            'status' => '1',
             "password" => bcrypt(env("DEFAULT_PASSWORD", '12345678')),
         ])->assignRole('admin');
 
@@ -32,6 +34,7 @@ class UserSeeder extends Seeder
             "name"=> "user",
             "email"=> "user@gmail.com",
             'is_admin_user' => '0',
+            'status' => '1',
             "password" => bcrypt(env("DEFAULT_PASSWORD", '12345678')),
         ])->assignRole('user');
     }
