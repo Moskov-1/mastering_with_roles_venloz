@@ -10,15 +10,13 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    
+    use HasFactory, Notifiable,  HasRoles {
+        // Alias the original trait methods
+        HasRoles::hasRole as traitHasRole;
+        HasRoles::hasAnyRole as traitHasAnyRole;
+    }
+
     protected static function booted()
     {
         static::created(function ($user) {
@@ -28,6 +26,25 @@ class User extends Authenticatable
         });
     }
     
+
+    public function hasRole($roles, $guard = null): bool
+    {
+        if ($this->traitHasRole('super_admin')) {
+            return true;
+        }
+
+        return $this->traitHasRole($roles, $guard);
+    }
+
+    public function hasAnyRole($roles, $guard = null): bool
+    {
+        if ($this->traitHasRole('super_admin')) {
+            return true;
+        }
+
+        return $this->traitHasAnyRole($roles, $guard);
+    }
+
     protected $fillable = [
         'name',
         'email',

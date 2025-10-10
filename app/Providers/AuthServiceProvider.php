@@ -29,7 +29,8 @@ class AuthServiceProvider extends ServiceProvider
             }
             
             // bypass: super-admin always allowed
-            return $user->isSuperAdmin() ? true : null;
+            // return $user->isSuperAdmin() ? true : null;
+            return $user->hasRole('super_admin') ? true : null;
         });
     }
 }

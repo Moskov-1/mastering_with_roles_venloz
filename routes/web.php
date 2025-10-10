@@ -18,5 +18,8 @@ Route::get('session-key', function(){
     return Session::get('session_key') ?? "No session key";
 });
 
+Route::get('session-forget', function(){
+    return session()->flush();
+});
 require_once __DIR__ .'/auth.php';
 

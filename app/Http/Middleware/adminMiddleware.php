@@ -17,11 +17,12 @@ class adminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
+            dd('not logged in');
             return redirect()->route('login')->with('error', 'Please log in');
         }
 
         if (Auth::check() && !Auth::user()->hasRole("admin")) {
-            dd(Auth::user(), Auth::user()->hasRole("admin"));
+            // dd(Auth::user(), Auth::user()->hasRole("admin"));
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
