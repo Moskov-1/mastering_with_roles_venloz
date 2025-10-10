@@ -32,7 +32,27 @@ class RoleController extends Controller
     
     public function edit(Role $role){
         $permissions = Permission::all();
-        $rolePermissions = $role->permissions()->pluck('id')->toArray();
+        $rolePermissions = $role->permissions()->pluck('name')->toArray();
         return view('backend.layout.roles.form', compact('role', 'rolePermissions', 'permissions'));
+    }
+
+    public function update(Request $request, Role $role){
+        // dd($request->all());
+        $request->validate([
+            'permissions' => 'required|array',
+            'permissions.*' => 'required|unique:permissions,id',
+        ]);
+        $role->syncPermissions($request->permissions);
+
+        return redirect()->route('backend.role.index');
+    }
+
+    public function destroy(Role $role){
+        if($role->name == 'super_admin'){
+            return redirect()->route('backend.role.index')->with('error', 'can not delete super admin');
+        }
+        $role->delete();
+        return redirect()->route('backend.role.index')->with('success', 'role successfully deleted');
+
     }
 }
