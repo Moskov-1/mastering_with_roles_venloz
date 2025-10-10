@@ -1,10 +1,12 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\Web\Backend\FaqController;
-use App\Http\Controllers\Web\Backend\ProjectController;
+use App\Http\Controllers\Web\Backend\RoleController;
 use App\Http\Controllers\Web\Backend\SiteController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Web\Backend\ProjectController;
+
 Route::group([ 'as'=>'backend.'], function () {
 
     Route::get('/', [SiteController::class,'index'])->name('dashboard.index');
@@ -19,6 +21,7 @@ Route::group([ 'as'=>'backend.'], function () {
     Route::post('page/status/{id}', [PageController::class,'status'])->name('page.status');
     Route::resource('page', PageController::class)->except(['show']);
 
-    
+    Route::resource('role', RoleController::class)->except(['show'])->middleware('role:super_admin');
+
     require_once __DIR__ .'/settings.php';
 });

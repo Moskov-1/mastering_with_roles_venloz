@@ -27,12 +27,13 @@ class User extends Authenticatable
     }
     
 
-    public function hasRole($roles, $guard = null): bool
+    public function hasRole(array|string|int|null $roles, $guard = null): bool
     {
         if ($this->traitHasRole('super_admin')) {
             return true;
         }
-
+        if(is_null($roles)) 
+            return false;
         return $this->traitHasRole($roles, $guard);
     }
 
@@ -41,7 +42,8 @@ class User extends Authenticatable
         if ($this->traitHasRole('super_admin')) {
             return true;
         }
-
+        if(is_null($roles)) 
+            return false;
         return $this->traitHasAnyRole($roles, $guard);
     }
 
