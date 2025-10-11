@@ -9,16 +9,17 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class TestMail extends Mailable
+class TestMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    protected $userData = null;
+    public function __construct($userData = null)
     {
-        //
+        $this->userData = $userData;
     }
 
     /**
@@ -27,7 +28,7 @@ class TestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Test Mail',
+            subject: 'Test Mail with queue',
         );
     }
 
@@ -38,6 +39,7 @@ class TestMail extends Mailable
     {
         return new Content(
             view: 'mail.test-email',
+            with: ['userData' => $this->userData],
         );
     }
 

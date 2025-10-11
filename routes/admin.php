@@ -14,22 +14,7 @@ use App\Mail\TestMail;
 
 Route::group([ 'as'=>'backend.'], function () {
 
-    // Simple test route to send email
-    Route::get('/test-mail', function () {
-        try {
-            Mail::to('test@example.com')->send(new TestMail());
-            
-            return response()->json([
-                'message' => 'Email sent successfully!',
-                'status' => 'Check your Mailtrap inbox'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Failed to send email',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    });
+    require_once __DIR__.'/queue.php';
 
     Route::get('/', [SiteController::class,'index'])->name('dashboard.index');
     Route::resource('project', ProjectController::class)->except(['show']);
