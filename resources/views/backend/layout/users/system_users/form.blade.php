@@ -49,7 +49,7 @@
                                                         <div class="mb-3 mb-lg-0">
                                                                 <label for="email"
                                                                         class="form-label">Email</label>
-                                                                <input type="email" name="email" disabled
+                                                                <input type="email" name="email" {{@$system_user ? 'disabled' : ''}}
                                                                         value="{{old('email', @$system_user->email)}}"
                                                                         class="form-control @error('email') is-invalid @enderror">
                                                                 @error('email')
@@ -58,7 +58,7 @@
                                                         </div>
                                                 </div>
                                         </div>
-                                        <input type="text" name="is_system_user" hidden value="1">
+                                        <input type="text" name="is_admin_user" hidden value="1">
                                         <div class="row">
                                                 <div class="col-lg-6">
                                                         <div class="mb-3">
@@ -78,7 +78,7 @@
                                                         <div class="mb-3 mb-lg-0">
                                                                 <label for="email"
                                                                         class="form-label">Password</label>
-                                                                <input type="password" name="password" 
+                                                                <input type="text" name="password" 
                                                                         class="form-control @error('password') is-invalid @enderror">
                                                                 @error('password')
                                                                         <small class="text-danger">{{ $message }}</small>

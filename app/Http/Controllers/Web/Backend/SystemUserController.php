@@ -52,20 +52,22 @@ class SystemUserController extends Controller
         return view('backend.layout.users.system_users.index');
     }
     public function create(){
-        $permissions = Role::all()->pluck('name')->toArray();
-        return view('backend.layout.users.system_users.form', compact('permissions'));
+        $roles = Role::all()->pluck('name')->toArray();
+        return view('backend.layout.users.system_users.form', compact('roles'));
     }
     public function store(UserRequest $request){
+        // dd($request->all());
         $data = $request->validated();
-
+        // dd($data);
         $user = new User;
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->is_admin_user = $data['is_admin_user'];
         $user->password = bcrypt($data['password']);
         $user->save();
-        $user->syncRoles($data['role']);
-
+        if ($request->has('role')) {
+            $user->syncRoles($request->role);
+        }
         return redirect()->route('backend.system-user.index')->with('success','System User Successfully created');
     }
 
@@ -119,9 +121,9 @@ class SystemUserController extends Controller
     public function destroy(User $system_user){
         try {
             $system_user->delete();
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(['status'=> 'error', 'message', 'User delete Failed ...'. $e->getMessage() ]);
         }
-        return redirect()->route('backend.system-user.index')->with('success','System User Successfully deleted');
+        return response()->json(['status'=> 'success', 'message', 'User deleted Successfully']);
     }
 }

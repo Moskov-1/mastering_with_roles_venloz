@@ -23,15 +23,19 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'email', 'unique:users,email'],
+            'email'    => ['required', 'email'],
             'password' => ['required', 'string', 'min:4'],
+            'role' => ['nullable']
         ];
         if ($this->routeIs('signup.post')) {
             $rules['is_admin_user'] = ['in:0']; 
         }
         if ($this->routeIs('backend.system-user.store')) {
-            $rules['is_admin_user'] = ['in:1']; 
+            $rules['is_admin_user'] = ['required','in:1']; 
+            $rules['email'] = ['required', 'email', 'unique:users,email'];
+
         }
+        // dd($rules);
         return $rules;
     }
 }

@@ -8,7 +8,7 @@
     <div class="ms-auto pageheader-btn">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Dynamic Page</li>
+            <li class="breadcrumb-item active" aria-current="page">System Users</li>
         </ol>
     </div>
 </div>
@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="card-body">
                      <div class="d-flex justify-content-end mb-2">
-                        <a href="{{ route('backend.page.create') }}" class="btn btn-primary">Add Page</a>
+                        <a href="{{ route('backend.system-user.create') }}" class="btn btn-primary">+ Add User</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered text-nowrap border-bottom w-100" id="datatable">
@@ -156,16 +156,16 @@
                     _token: "{{csrf_token()}}"
                 },
                 success: function(response) {
-                    console.log(response);
+                    console.log(response,response[0], response[1] );
                     // Reloade DataTable
                     $('#datatable').DataTable().ajax.reload();
                     if (response.success === true) {
                         // show toast message
-                        toastr.success(response.message);
+                        toastr.success(response[1]);
                     } else if (response.errors) {
-                        toastr.error(response.errors[0]);
+                        toastr.error(response[0]);
                     } else {
-                        toastr.error(response.message);
+                        toastr.error(response[1]);
                     }
                 },
                 error: function(error) {
@@ -213,9 +213,9 @@
                 success: function(response) {
                     $('#datatable').DataTable().ajax.reload();
                     if (response['t-success']) {
-                        toastr.success(response.message);
+                        toastr.success(response[1]);
                     } else {
-                        toastr.error(response.message);
+                        toastr.error(response[1]);
                     }
                 },
                 error: function(error) {
