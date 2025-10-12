@@ -31,7 +31,7 @@ Route::group([ 'as'=>'backend.'], function () {
     Route::post('system-user/status/{id}', [SystemUserController::class,'status'])->name('system-user.status');
     Route::resource('system-user', SystemUserController::class)->except(['show']);
     
-    Route::resource('role', RoleController::class)->except(['show'])->middleware('role:super_admin');
+    Route::resource('role', RoleController::class)->except(['show'])->middleware('permission:role_management');
 
     require_once __DIR__ .'/settings.php';
 });

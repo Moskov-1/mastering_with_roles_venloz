@@ -7,13 +7,16 @@ use App\Rules\PasswordRule;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
-use Yajra\DataTables\Contracts\DataTable;
 
 class SystemUserController extends Controller
 {
+    public function __construct(){
+        // $this->middleware('auth');
+        // $this->middleware('can:user_create')->only(['create', 'store']);
+    }
+
     public function index(Request $request){
         $users = User::where('is_admin_user', 1)->orderBy('id','desc')->get();
         if($request->ajax()){

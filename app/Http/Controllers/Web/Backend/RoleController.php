@@ -41,9 +41,10 @@ class RoleController extends Controller
         $request->validate([
             'name' => 'required|unique:roles,name',
         ]);
-        // dd($request->all());
+        $permissions = Permission::whereIn('name', $request->permissions)->get();
         $role = Role::create($request->only('name'));
-        $role->syncPermissions($request->permissions);
+        $role->syncPermissions($permissions);
+        dd($role->getAllPermissions());
         return redirect()->route('backend.role.index')->with('success','Role created succesffully');
     }
 
@@ -51,9 +52,12 @@ class RoleController extends Controller
         // dd($request->all());
         $request->validate([
             'permissions' => 'required|array',
-            'permissions.*' => 'required|unique:permissions,id',
+            'permissions.*' => 'required|exists:permissions,name',
         ]);
-        $role->syncPermissions($request->permissions);
+        $permissions = Permission::whereIn('name', $request->permissions)->get();
+        
+        $role->syncPermissions($permissions);
+        // dd($role->getAllPermissions());
 
         return redirect()->route('backend.role.index')->with('success', 'Role Updated Successfully');
     }

@@ -12,11 +12,12 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
 
-    use HasFactory, Notifiable,  HasRoles {
-        // Alias the original trait methods
-        HasRoles::hasRole as traitHasRole;
-        HasRoles::hasAnyRole as traitHasAnyRole;
-    }
+    use HasFactory, Notifiable,  HasRoles;
+    // HasRoles {
+    //     // Alias the original trait methods
+    //     HasRoles::hasRole as traitHasRole;
+    //     HasRoles::hasAnyRole as traitHasAnyRole;
+    // }
 
     protected static function booted()
     {
@@ -28,26 +29,26 @@ class User extends Authenticatable implements JWTSubject
     }
     
 
-    public function hasRole(array|string|int|null $roles, $guard = null): bool
-    {
-        if ($this->traitHasRole('super_admin')) {
-            return true;
-        }
-        if(is_null($roles)) 
-            return false;
-        return $this->traitHasRole($roles, $guard);
-    }
+    // public function hasRole(array|string|int|null $roles, $guard = null): bool
+    // {
+    //     if ($this->traitHasRole('super_admin')) {
+    //         return true;
+    //     }
+    //     if(is_null($roles)) 
+    //         return false;
+    //     return $this->traitHasRole($roles, $guard);
+    // }
 
     
-    public function hasAnyRole($roles, $guard = null): bool
-    {
-        if ($this->traitHasRole('super_admin')) {
-            return true;
-        }
-        if(is_null($roles)) 
-            return false;
-        return $this->traitHasAnyRole($roles, $guard);
-    }
+    // public function hasAnyRole($roles, $guard = null): bool
+    // {
+    //     if ($this->traitHasRole('super_admin')) {
+    //         return true;
+    //     }
+    //     if(is_null($roles)) 
+    //         return false;
+    //     return $this->traitHasAnyRole($roles, $guard);
+    // }
 
     /** Get the identifier that will be stored in the subject claim of the JWT.
      * @return mixed */

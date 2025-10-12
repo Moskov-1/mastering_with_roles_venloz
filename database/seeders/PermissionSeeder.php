@@ -28,7 +28,7 @@ class PermissionSeeder extends Seeder
         ];
 
         // Create permissions if not already exist
-        foreach ($permissions as $permission) {
+        foreach (array_unique($permissions) as $permission) {
             Permission::firstOrCreate(['name' => $permission]);
         }
     }

@@ -105,7 +105,7 @@
                     </div>
                 </li>
                 
-                @if(auth()->user()->hasAnyRole(['super_admin']) || auth('web')->user()->can('role_management'))
+                @canany(['role_management'])
                     <li class="nav-item">
                         <a class="nav-link menu-link {{getPageStatus(['backend.role.*','backend.system-user.*'],'collapsed active')}}" href="#sidebarPages" data-bs-toggle="collapse" role="button" 
                         aria-expanded="false" aria-controls="sidebarPages">
@@ -128,7 +128,7 @@
                             </ul>
                         </div>
                     </li>
-                @endif
+                @endcanany
                 
                 <li class="nav-item">
                     <a class="nav-link menu-link {{getPageStatus('backend.settings.*')}}" href="#sidebarMultilevel" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarMultilevel">

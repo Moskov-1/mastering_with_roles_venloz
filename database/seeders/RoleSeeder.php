@@ -22,5 +22,6 @@ class RoleSeeder extends Seeder
         $user = Role::create(['name' => 'user']);
 
         $superAdmin->givePermissionTo(Permission::all());
+        // $superAdmin->syncPermissions(Permission::all());
     }
 }

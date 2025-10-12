@@ -4,16 +4,6 @@ use App\Mail\TestMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
-// queue stat
-    Route::get('/queue-status', function () {
-        return response()->json([
-            'queue_driver' => config('queue.default'),
-            'queue_connection' => config('queue.connections.' . config('queue.default') . '.driver'),
-            'failed_jobs_table' => \Illuminate\Support\Facades\Schema::hasTable('failed_jobs') ? 'exists' : 'missing',
-            'jobs_table' => \Illuminate\Support\Facades\Schema::hasTable('jobs') ? 'exists' : 'missing',
-        ]);
-    });
-
 // Simple test route to send email
     Route::get('/test-mail', function () {
         try {
