@@ -26,8 +26,5 @@ class AppServiceProvider extends ServiceProvider
             $view->with('settings', Setting::first());
         });
         
-        // Gate::before(function ($user, $ability) {
-        //     return $user->hasRole('super_admin') ? true : null;
-        // });
     }
 }

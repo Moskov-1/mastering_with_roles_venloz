@@ -105,7 +105,7 @@
                     </div>
                 </li>
                 
-                @canany(['role_management'])
+                @canany(['role_management','user_management'])
                     <li class="nav-item">
                         <a class="nav-link menu-link {{getPageStatus(['backend.role.*','backend.system-user.*'],'collapsed active')}}" href="#sidebarPages" data-bs-toggle="collapse" role="button" 
                         aria-expanded="false" aria-controls="sidebarPages">
