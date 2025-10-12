@@ -76,6 +76,22 @@ class SystemUserController extends Controller
         $roles = Role::all()->pluck('name')->toArray();
         $userRoles = $system_user->getRoleNames()->toArray();
         // dd($system_user->getRoleNames());
+        // dd([
+        //     'permissions' => $system_user->getAllPermissions()->pluck('name'),
+        //     'can_role_management' => $system_user->can('role_management'),
+        //     'guard' => $system_user->guard_name ?? 'web (default)',
+        //     Permission::pluck('guard_name', 'name'),
+        //     Role::pluck('guard_name', 'name')
+        // ]);
+        // dd([
+        //     'user_roles' => $system_user->getRoleNames(),
+        //     'role_permissions' => $system_user->roles->flatMap->permissions->pluck('name')->unique(),
+        //     'direct_permissions' => $system_user->permissions->pluck('name'),
+        // ]);
+        dd([
+            'auth_guard' => auth()->getDefaultDriver(),
+            'user_guard' => $system_user->guard_name ?? 'no guard column on users table',
+        ]);
         return view('backend.layout.users.system_users.form', compact('system_user', 'roles', 'userRoles'));
     }
 
