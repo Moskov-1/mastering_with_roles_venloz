@@ -45,7 +45,7 @@ function isLinkedStorage(){
         $imageName    = $slugName . '-' . uniqid() . '.' . $file->extension();
 
         // Define storage path
-        $uploadPath = public_path('uploads/' . $folder);
+        $uploadPath = public_path('public_uploads/' . $folder);
         if (!file_exists($uploadPath)) {
             mkdir($uploadPath, 0755, true);
         }
@@ -86,7 +86,7 @@ function isLinkedStorage(){
         return fileUpload($file, $folder, $option);
     }
     function fileUpload($file, string $folder, $disk='public', string $option = null): ?string {
-        
+
         if (!$file || !$file->isValid()) {
             return null;
         }
