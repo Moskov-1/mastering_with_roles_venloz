@@ -75,9 +75,13 @@
                                     </div>
                                 </div>
                                 <!-- end col -->
+                                @if(Route::is(['auth.reset.link.get','auth.reset.link.post']))
+                                    @yield('content')
+                                @else
 
                                 <div class="col-lg-6">
                                     <div class="p-lg-5 p-4">
+
                                         <div>
                                             <h5 class="text-primary">Welcome Back !</h5>
                                             <p class="text-muted">Sign in to continue to {{$settings->app_name}}.</p>
@@ -91,13 +95,15 @@
                                             <div class="mt-5 text-center">
                                                 <p class="mb-0">Don't have an account ? <a href="{{route('auth.signup.get')}}" class="fw-semibold text-primary text-decoration-underline"> Signup</a> </p>
                                             </div>
-                                        @else
+                                        @elseif(Route::is('signup.get'))
                                             <div class="mt-5 text-center">
                                                 <p class="mb-0">Already have an account ? <a href="{{route('login')}}" class="fw-semibold text-primary text-decoration-underline"> login</a> </p>
                                             </div>
                                         @endif
                                     </div>
                                 </div>
+                                @endif
+                                
                                 <!-- end col -->
                             </div>
                             <!-- end row -->

@@ -1,4 +1,4 @@
-@extends('backend.master')
+@extends('backend.layout.auth.auth-app')
 @section('content')
 <form action="{{route('auth.reset.post')}}" method="post">
     @csrf
