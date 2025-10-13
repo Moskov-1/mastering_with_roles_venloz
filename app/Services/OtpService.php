@@ -20,6 +20,9 @@ class OtpService
     public function getTtl(){
         return $this->ttl;
     }
+    public function getTtl_min_time(){
+        return floor($this->getTtl() / 60);
+    }
     public function generateOtp(string $key, int $ttl = null): string
     {
         if(!is_null($ttl))
@@ -34,7 +37,7 @@ class OtpService
      */
     public function sendOtpEmail(string $email, string $otp )
     {
-        Mail::to($email)->send(new OtpMail(otp: $otp));
+        Mail::to($email)->send(new OtpMail(otp: $otp, ttl: $this->getTtl_min_time()));
     }
 
     /**

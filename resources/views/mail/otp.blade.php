@@ -204,28 +204,29 @@
                 This code is valid for a limited time only.
             </p>
             
-            <div class="otp-section">
-                <span class="otp-label">Your OTP Code:</span>
-                <div class="otp-code">
-                    <div class="otp-digits">
-                        <div class="digit">8</div>
-                        <div class="digit">4</div>
-                        <div class="digit">2</div>
-                        <div class="digit">9</div>
-                        <div class="digit">1</div>
-                        <div class="digit">7</div>
-                    </div> 
-                    <br/>
-                    <button class="copy-btn" id="copyBtn">
-                        <i class="fas fa-copy"></i> Copy Code
-                    </button>
+            <div style="font-family: Arial, sans-serif; color: #333; text-align:center;">
+                <h2 style="margin-bottom: 15px; font-size: 20px;">Your OTP Code</h2>
+                
+                <div style="
+                    display: inline-block;
+                    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+                    color: #fff;
+                    padding: 20px 35px;
+                    border-radius: 12px;
+                    font-size: 28px;
+                    font-weight: bold;
+                    letter-spacing: 10px;
+                    box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+                ">
+                    {{ implode(' ', str_split($otp)) }}
                 </div>
                 
-                <div class="validity">
-                    <i class="fas fa-clock"></i>
-                    <span>This OTP is valid for <strong>10 minutes</strong></span>
-                </div>
+                <p style="margin-top: 20px; color: #6c757d;">
+                    This OTP is valid for <strong>{{$ttl}} minutes</strong>.
+                </p>
             </div>
+
+
             
             <p class="message">
                 For security reasons, please do not share this code with anyone. 
@@ -242,20 +243,6 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('copyBtn').addEventListener('click', function() {
-            const otp = '842917';
-            navigator.clipboard.writeText(otp).then(() => {
-                const btn = document.getElementById('copyBtn');
-                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                btn.classList.add('copied');
-                
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-copy"></i> Copy Code';
-                    btn.classList.remove('copied');
-                }, 2000);
-            });
-        });
-    </script>
+
 </body>
 </html>

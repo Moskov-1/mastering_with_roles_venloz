@@ -17,9 +17,11 @@ class OtpMail extends Mailable implements ShouldQueue
      * Create a new message instance.
      */
     protected $otp;
-    public function __construct($otp)
+    protected $ttl;
+    public function __construct($otp, $ttl)
     {
         $this->otp = $otp; 
+        $this->ttl = $ttl;
     }
 
     /**
@@ -39,7 +41,7 @@ class OtpMail extends Mailable implements ShouldQueue
     {
         return new Content(
             view: 'mail.otp',
-            with: ['otp'=> $this->otp],
+            with: ['otp'=> $this->otp, 'ttl'=> $this->ttl],
         );
     }
 

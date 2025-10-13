@@ -38,9 +38,9 @@ class PasswordResetController extends Controller
     public function submitOtp(Request $request){
         $request->validate([
             'email' => 'required|email',
-            'otp' => 'required|digits:6',
+            'otp' => 'required',
         ]);
-
+        $request->otp = removeSpaces($request->otp);
         if ($this->otpService->verifyOtp($request->email, $request->otp)) {
             // return response()->json(['message' => 'OTP verified']);
             return view('backend.layout.auth.reset-password');
