@@ -2,9 +2,13 @@
 
 use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\Facades\Image;
-
+use Illuminate\Support\Facades\Storage;
+    function isLinkedStorage(){
+        return env('APP_LINKED_LOCAL_STORAGE', false);
+    }
     function removeSpaces($string) {
         return str_replace(' ', '', $string);
     }
@@ -26,15 +30,17 @@ use Intervention\Image\Facades\Image;
     function sad(){
         return 'sad';
     }
-    function fileUpdate($file, string $folder, string $old = null, $option = null){
-        if($old){
-            fileDelete($old);
-        }
-        return fileUpload($file,  $folder, $option);
-    }
 
-    function fileUpload($file, string $folder, string $option = null): ?string
-    {
+    function fileUpdate($file, ?string $oldPath, string $folder, string $option = null): ?string {
+        // Delete old file if it exists
+        if ($oldPath) {
+            fileDelete($oldPath);
+        }
+
+        // Upload and return new path
+        return fileUpload($file, $folder, $option);
+    }
+    function fileUpload($file, string $folder, string $option = null): ?string {
         if (!$file || !$file->isValid()) {
             return null;
         }
@@ -42,33 +48,57 @@ use Intervention\Image\Facades\Image;
         // Generate clean unique filename
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $slugName     = Str::slug($originalName);
-        $imageName    = $slugName . '-' . uniqid() . '.' . $file->extension();
+        $extension    = $file->extension();
+        $fileName     = $slugName . '-' . uniqid() . '.' . $extension;
 
-        // Define storage path
-        $uploadPath = public_path('uploads/' . $folder);
-        if (!file_exists($uploadPath)) {
-            mkdir($uploadPath, 0755, true);
+        // Detect if it's an image
+        $isImage = in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+
+        // Check if storage is linked
+        $isLinked = isLinkedStorage();
+
+        // For image files: process and re-wrap
+        if ($isImage) {
+            $tempPath = sys_get_temp_dir() . '/' . $fileName;
+
+            // Resize / process via Intervention
+            $img = Image::make($file)
+                ->resize(200, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
+            if ($option === 'thumb') {
+                $img->resize(100, 100);
+            }
+
+            $img->save($tempPath, 90);
+
+            // ✅ Re-wrap into UploadedFile so we can use ->store()
+            $file = new UploadedFile(
+                $tempPath,
+                $fileName,
+                mime_content_type($tempPath),
+                null,
+                true // mark as test file (no move error)
+            );
         }
 
-        // Full file path
-        $filePath = $uploadPath . '/' . $imageName;
+        // Define disk & folder
+        if ($isLinked) {
+            // Use storage/app/public via symlink
+            $path = $file->storeAs($folder, $fileName, 'public');
+            return 'storage/' . $path;
+        } else {
+            // Fallback to /public/uploads
+            $uploadPath = public_path('uploads/' . $folder);
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
 
-        // Resize / process image
-        $img = Image::make($file)
-            ->resize(200, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-
-        // Optionally apply other operations
-        if ($option === 'thumb') {
-            $img->resize(100, 100);
+            $file->move($uploadPath, $fileName);
+            return 'uploads/' . $folder . '/' . $fileName;
         }
-
-        $img->save($filePath, 90);
-
-        // Return relative path (useful for DB & display)
-        return 'uploads/' . $folder . '/' . $imageName;
     }
 
     function fileUpload_old($file, string $folder, string $option = null): ?string
@@ -96,10 +126,25 @@ use Intervention\Image\Facades\Image;
     }
 
     //! File or Image Delete
-    function fileDelete(string $path): void
-    {
-        if (file_exists($path)) {
-            unlink($path);
+    function fileDelete(?string $path): void {
+        if (!$path) return;
+
+        // Normalize slashes just in case
+        $path = str_replace('\\', '/', $path);
+
+        // If it’s a storage file (e.g. "storage/profile/...") 
+        if (str_starts_with($path, 'storage/')) {
+            $storagePath = str_replace('storage/', '', $path);
+            if (Storage::disk('public')->exists($storagePath)) {
+                Storage::disk('public')->delete($storagePath);
+            }
+        } 
+        // If it’s a public/uploads file
+        elseif (str_starts_with($path, 'uploads/')) {
+            $fullPath = public_path($path);
+            if (file_exists($fullPath)) {
+                unlink($fullPath);
+            }
         }
     }
 
