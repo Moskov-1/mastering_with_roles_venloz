@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Web\Backend\Auth;
 
+use App\Models\User;
+use App\Rules\PasswordRule;
 use App\Services\OtpService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class PasswordResetController extends Controller
 {
@@ -43,9 +48,39 @@ class PasswordResetController extends Controller
         $request->otp = removeSpaces($request->otp);
         if ($this->otpService->verifyOtp($request->email, $request->otp)) {
             // return response()->json(['message' => 'OTP verified']);
-            return view('backend.layout.auth.reset-password');
+            Session::put('otp-flag',true);
+            return view('backend.layout.auth.reset-password', ['email'=>$request->email]);
         }
 
-        return response()->json(['message' => 'Invalid OTP'], 422);
+        return redirect()->route('login')->with("error", "invalid OTP");
+    }
+
+    public function reset(Request $request){
+        // dd($request->email);
+        if(!Session::get('otp-flag')){
+            return redirect()->route('login')->with('error','Unauthorized Entry Attempt');
+        }
+        $request->validate([
+            'email'=> 'required',
+            'password' => ['required', new PasswordRule()],
+            'password_confirmation' => 'required'
+        ]);
+
+        Session::forget('otp-flag');
+        try{
+            $user = User::where('email', $request->email)->first();
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            if( Auth::attempt(['email' => $request->email,'password'=> $request->password]) ){
+                return redirect()->route('backend.dashboard.index')->with("success","login completed successfully");
+            }
+            else
+                return redirect()->route('login')->with("error","Login Failed");
+        }
+        catch(\Exception $e){
+            return redirect()->route('login')->with("error", $e->getMessage());
+        }
+        
     }
 }

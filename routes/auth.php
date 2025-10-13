@@ -17,6 +17,7 @@ Route::group(['as'=> 'auth.'], function () {
 
     // Route::get('otp-link', [PasswordResetController::class,'get'])->name('otp.get');
     Route::post('otp-link', [PasswordResetController::class,'submitOtp'])->name('otp.post');
+    Route::post('finish-reset-password', [PasswordResetController::class, 'reset'])->name('reset.finish');
 
     Route::group(['middleware'=> 'admin'], function () {
         Route::post('logout', [AuthController::class,'logout'])->name('logout.post');
