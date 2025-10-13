@@ -23,7 +23,9 @@ use Intervention\Image\Facades\Image;
     
         return Route::is($url) ? ($text ?? 'active') : '';
     }
-
+    function sad(){
+        return 'sad';
+    }
     function fileUpdate($file, string $folder, string $old = null, $option = null){
         if($old){
             fileDelete($old);

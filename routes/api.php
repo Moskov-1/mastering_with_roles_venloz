@@ -13,4 +13,10 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::post('/profile', [AuthController::class, 'profile'])->middleware('auth:api');
+
+    
+    Route::post('/password/forgot', [AuthController::class, 'forgotPassword']);
+    Route::post('/password/reset', [AuthController::class, 'resetPassword']);
+    Route::post('/password/verify-otp', [AuthController::class, 'verifyOtp']);
+
 });

@@ -28,7 +28,8 @@ class OtpService
         if(!is_null($ttl))
             $this->setTtl($ttl);
         $otp = random_int(100000, 999999); // 6-digit OTP
-        Cache::put($key, $otp, $ttl); // store in cache for $ttl seconds
+        if(!request()->is('api/*'))
+            Cache::put($key, $otp, $ttl); // store in cache for $ttl seconds
         return $otp;
     }
 

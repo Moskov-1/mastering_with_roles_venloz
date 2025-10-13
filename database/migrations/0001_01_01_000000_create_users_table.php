@@ -19,6 +19,9 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('password_reset_otp')->nullable();
+            $table->string('password_reset_otp_is_verfied')->default(false);
+            $table->timestamp('password_reset_otp_expiry')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
