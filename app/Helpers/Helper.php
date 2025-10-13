@@ -6,7 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
-    function isLinkedStorage(){
+function isLinkedStorage(){
         return env('APP_LINKED_LOCAL_STORAGE', false);
     }
     function removeSpaces($string) {
@@ -27,10 +27,55 @@ use Illuminate\Support\Facades\Storage;
     
         return Route::is($url) ? ($text ?? 'active') : '';
     }
-    function sad(){
-        return 'sad';
+    function public_fileUpdate($file, string $folder, string $old = null, $option = null){
+        if($old){
+            fileDelete($old);
+        }
+        return fileUpload($file,  $folder, $option);
     }
+     function public_fileUpload($file, string $folder, string $option = null): ?string
+    {
+        if (!$file || !$file->isValid()) {
+            return null;
+        }
 
+        // Generate clean unique filename
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $slugName     = Str::slug($originalName);
+        $imageName    = $slugName . '-' . uniqid() . '.' . $file->extension();
+
+        // Define storage path
+        $uploadPath = public_path('uploads/' . $folder);
+        if (!file_exists($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // Full file path
+        $filePath = $uploadPath . '/' . $imageName;
+
+        // Resize / process image
+        $img = Image::make($file)
+            ->resize(200, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+
+        // Optionally apply other operations
+        if ($option === 'thumb') {
+            $img->resize(100, 100);
+        }
+
+        $img->save($filePath, 90);
+
+        // Return relative path (useful for DB & display)
+        return 'uploads/' . $folder . '/' . $imageName;
+    }
+    function public_fileDelete(string $path): void
+    {
+        if (file_exists($path)) {
+            unlink($path);
+        }
+    }
     function fileUpdate($file, ?string $oldPath, string $folder, string $option = null): ?string {
         // Delete old file if it exists
         if ($oldPath) {
@@ -40,7 +85,8 @@ use Illuminate\Support\Facades\Storage;
         // Upload and return new path
         return fileUpload($file, $folder, $option);
     }
-    function fileUpload($file, string $folder, string $option = null): ?string {
+    function fileUpload($file, string $folder, $disk='public', string $option = null): ?string {
+        
         if (!$file || !$file->isValid()) {
             return null;
         }
@@ -87,9 +133,10 @@ use Illuminate\Support\Facades\Storage;
         // Define disk & folder
         if ($isLinked) {
             // Use storage/app/public via symlink
-            $path = $file->storeAs($folder, $fileName, 'public');
+            $path = $file->storeAs($folder, $fileName, $disk);
             return 'storage/' . $path;
-        } else {
+        } 
+        else {
             // Fallback to /public/uploads
             $uploadPath = public_path('uploads/' . $folder);
             if (!file_exists($uploadPath)) {
@@ -101,30 +148,7 @@ use Illuminate\Support\Facades\Storage;
         }
     }
 
-    function fileUpload_old($file, string $folder, string $option = null): ?string
-    {
-        if (!$file->isValid()) {
-            return null;
-        }
-
-        $name = time() . '_' . $file->getClientOriginalName();
-        $imageName = Str::slug($name) . '.' . $file->extension();
-        $path      = public_path('uploads/' . $folder);
-        if (!file_exists($path)) {
-            mkdir($path, 0755, true);
-        }
-        $path = $path.'/'. $imageName;
-        // $file->move($path, $imageName);
-        Image::make($file)
-            ->resize(200, null, function ($constraint) {
-                $constraint->aspectRatio(); // maintain ratio
-                $constraint->upsize();     // prevent upsizing
-            })
-            ->save($path, 90);
-        return $path;
-        // return 'uploads/' . $folder . '/' . $imageName;
-    }
-
+    
     //! File or Image Delete
     function fileDelete(?string $path): void {
         if (!$path) return;
