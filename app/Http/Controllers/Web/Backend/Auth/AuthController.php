@@ -23,6 +23,8 @@ class AuthController extends Controller
         $user = User::create($request->validated());
 
         if( Auth::attempt(['email' => $request->email,'password'=> $request->password]) ){
+            $request->session()->regenerate();
+
             return redirect()->route('backend.dashboard.index')->with("success","registration completed successfully");
         }
         return back()->with(
