@@ -107,7 +107,7 @@ class SystemUserController extends Controller
             'password' => [['nullable', new PasswordRule]],
         ]);
         try {
-            if(is_null($request['password'])){
+            if(!is_null($request['password'])){
                 $system_user->password = bcrypt($request['password']);
                 $system_user->update();
             }
