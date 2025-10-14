@@ -31,7 +31,13 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">Menu</span></li>
-                <li class="nav-item">
+                 <li class="nav-item">
+                    <a class="nav-link menu-link {{ request()->routeIs('backend.dashboard.*') ? 'active' : '' }}" href="{{ route('backend.dashboard.index') }}">
+                        <i class="ri-dashboard-line"></i> <span>Dashboard</span>
+                    </a>
+                </li>
+
+                {{-- <li class="nav-item">
                     <a class="nav-link menu-link  {{getPageStatus('backend.dashboard.*', 'collapsed active')}}" href="#sidebarDashboards" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDashboards">
                         <i class="ri-dashboard-2-line"></i> <span data-key="t-dashboards">Dashboards</span>
                     </a>
@@ -42,7 +48,8 @@
                             </li>
                         </ul>
                     </div>
-                </li> <!-- end Dashboard Menu -->
+                </li>  --}}
+                <!-- end Dashboard Menu -->
                 <li class="nav-item">
                     <a class="nav-link menu-link {{getPageStatus('backend.feature.*', 'collapsed active')}}" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">
                         <i class="ri-apps-2-line"></i> <span data-key="t-apps">Features</span>
@@ -107,8 +114,11 @@
                 
                 @canany(['role_management','user_management'])
                     <li class="nav-item">
-                        <a class="nav-link menu-link {{getPageStatus(['backend.role.*','backend.system-user.*'],'collapsed active')}}" href="#sidebarPages" data-bs-toggle="collapse" role="button" 
-                        aria-expanded="false" aria-controls="sidebarPages">
+                        <a class="nav-link menu-link {{getPageStatus(['backend.role.*','backend.system-user.*'],'collapsed active')}}" 
+                        href="#sidebarPages"
+                         data-bs-toggle="collapse" role="button" 
+                        aria-expanded="false" aria-controls="sidebarPages"
+                        >
                             <i class="ri-pages-line"></i> <span data-key="t-pages">Users</span>
                         </a>
                         <div class="collapse menu-dropdown {{getPageStatus('backend.system-user.*','show')}}" id="sidebarPages">
@@ -122,7 +132,7 @@
                         <div class="collapse menu-dropdown {{getPageStatus('backend.role.*','show')}}" id="sidebarPages">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
-                                    <a href="{{route('backend.role.index')}}" class="nav-link {{getPageStatus('backend.role.*')}}" data-key="t-starter"> Role Management </a>
+                                    <a href="{{route('backend.role.index')}}" class="nav-link {{getPageStatus('backend.role.*')}}" data-key="t-profile"> Role Management </a>
                                 </li>
                                 
                             </ul>

@@ -68,7 +68,7 @@ function isLinkedStorage(){
         $img->save($filePath, 90);
 
         // Return relative path (useful for DB & display)
-        return 'uploads/' . $folder . '/' . $imageName;
+        return 'public_uploads/' . $folder . '/' . $imageName;
     }
     function public_fileDelete(string $path): void
     {
