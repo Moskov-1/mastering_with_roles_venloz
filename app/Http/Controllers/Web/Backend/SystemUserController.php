@@ -6,8 +6,9 @@ use App\Models\User;
 use App\Rules\PasswordRule;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
-use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class SystemUserController extends Controller
@@ -139,6 +140,9 @@ class SystemUserController extends Controller
     }
     public function destroy(User $system_user){
         try {
+            if($system_user->id == Auth::user()->id){
+                return response()->json(['status'=> 'error', 'message', 'Can\'t delete own id ...']);
+            }
             $system_user->delete();
         } catch (\Exception $e) {
             return response()->json(['status'=> 'error', 'message', 'User delete Failed ...'. $e->getMessage() ]);
