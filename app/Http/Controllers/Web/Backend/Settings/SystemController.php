@@ -19,7 +19,7 @@ class SystemController extends Controller
 
 
         if($request->file('logo')){
-            $settings->logo = fileUpdate($request->logo, 'settings/logo', $settings->logo);
+            $settings->logo = fileUpdate($request->logo, 'settings/logo', $settings->logo, 'public');
         }
         if($request->file('mini_logo')){
             $settings->mini_logo = fileUpdate($request->mini_logo, 'settings/mini_logo', $settings->mini_logo);

@@ -76,14 +76,14 @@ function isLinkedStorage(){
             unlink($path);
         }
     }
-    function fileUpdate($file, string $folder, ?string $oldPath, string $option = null): ?string {
+    function fileUpdate($file, string $folder, ?string $oldPath, $disk='public', string $option = null): ?string {
         // Delete old file if it exists
         if ($oldPath) {
             fileDelete($oldPath);
         }
 
         // Upload and return new path
-        return fileUpload($file, $folder, $option);
+        return fileUpload($file, $folder, $disk, option: $option);
     }
     function fileUpload($file, string $folder, $disk='public', string $option = null): ?string {
 
@@ -117,7 +117,6 @@ function isLinkedStorage(){
             if ($option === 'thumb') {
                 $img->resize(100, 100);
             }
-
             $img->save($tempPath, 90);
 
             // ✅ Re-wrap into UploadedFile so we can use ->store()
@@ -129,6 +128,8 @@ function isLinkedStorage(){
                 true // mark as test file (no move error)
             );
         }
+        
+        // dd($fileName);
 
         // Define disk & folder
         if ($isLinked) {
