@@ -124,7 +124,7 @@ class AuthController extends BaseController
 
         // Store the token and expiry time in the database
         $user->password_reset_otp = $otp;
-        $user->password_reset_otp_is_verified = true;
+        $user->password_reset_otp_is_verified = false;
         $user->password_reset_otp_expiry = now()->addMinutes( $this->otpService->getTtl_min_time());  // Token expires after 5 minutes
         $user->save();
 
@@ -170,6 +170,7 @@ class AuthController extends BaseController
             return jsonErrorResponse('OTP has expired.', 400);
         }
         
+        $user->password_reset_otp_is_verified = true;
         $user->password_reset_otp_expiry = now()->addMinutes(5);
         $user->save(); 
         // OTP is valid, proceed to allow password reset
@@ -237,7 +238,7 @@ class AuthController extends BaseController
 
         // Store the new token and set expiry time
         $user->password_reset_otp = $otp;
-        $user->password_reset_otp_is_verfied = false;
+        $user->password_reset_otp_is_verified = false;
         $user->password_reset_otp_expiry = now()->addMinutes($this->otpService->getTtl_min_time());  // Token expires after 5 minutes
         $user->save();
 
