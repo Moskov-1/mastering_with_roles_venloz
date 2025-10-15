@@ -76,7 +76,7 @@ function isLinkedStorage(){
             unlink($path);
         }
     }
-    function fileUpdate($file, ?string $oldPath, string $folder, string $option = null): ?string {
+    function fileUpdate($file, string $folder, ?string $oldPath, string $option = null): ?string {
         // Delete old file if it exists
         if ($oldPath) {
             fileDelete($oldPath);
